@@ -1,3 +1,5 @@
+import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class TicTacToeApplication {
@@ -11,8 +13,55 @@ public class TicTacToeApplication {
         System.out.println("╔"+midLine.repeat(30)+"╗");
         System.out.println("║ TIC TAC TOE APPLICATION GAME ║");
         System.out.println("╚"+midLine.repeat(30)+"╝");
+
+        System.out.println("\n\n╔"+midLine.repeat(30)+"╗");
+        System.out.println("║ [1] - One Player game        ║");
+        System.out.println("║ [2] - Two Players game       ║");
+        System.out.println("╚"+midLine.repeat(30)+"╝");
+        int option = 0;
+
+        while (true) {
+            System.out.print("Choose: ");
+
+            try {
+                option = SC.nextInt();
+            } catch (InputMismatchException e) {
+                option = 0;
+                SC.next();
+            }
+
+            switch (option) {
+                case 1:
+                    onePlayerGame();
+                    return;
+                case 2:
+                    twoPlayersGame();
+                    return;
+                default:
+                    System.out.println("Invalid option");
+            }
+        }
+
+    }
+
+    private static void onePlayerGame() {
         loadNewGame();
-        sleep();
+
+        while (true){
+            playerAct();
+            clear();
+            showBoard();
+
+            if (endGame()) break;
+
+            aiAct();
+
+            if (endGame()) break;
+        }
+    }
+
+    private static void twoPlayersGame() {
+        loadNewGame();
 
         while (true){
             playerAct();
@@ -76,6 +125,26 @@ public class TicTacToeApplication {
 
             if (validMovement) GAME[position] = PLAYER ? "X" : "O";
         } while (!validMovement);
+    }
+
+    static void aiAct() {
+        sleep();
+        clear();
+
+        if (PLAYER) PLAYER = false;
+        else PLAYER = true;
+
+        while (true) {
+
+            Random rd = new Random();
+
+            int position = rd.nextInt(8);
+
+            if (GAME[position] == null) {
+                GAME[position] = PLAYER ? "X" : "0";
+                break;
+            }
+        }
     }
 
     static boolean  validatePoint(int position) {
@@ -151,7 +220,12 @@ public class TicTacToeApplication {
     private static void sleep() {
 
         try {
-            Thread.sleep(3000);
+            System.out.print("\n.");
+            Thread.sleep(1000);
+            System.out.print(".");
+            Thread.sleep(1000);
+            System.out.print(".");
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             return;
         }
